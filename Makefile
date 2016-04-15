@@ -8,12 +8,14 @@ TEST_FILE ?= t
 
 .PHONY: all test install
 
-all: ;
+all: lint test;
+
+lint:
+	@util/lua-releng
 
 install: all
 	$(INSTALL) -d $(DESTDIR)/$(LUA_LIB_DIR)/resty
 	$(INSTALL) lib/resty/*.lua $(DESTDIR)/$(LUA_LIB_DIR)/resty/
 
-test: all
-	PATH=$(OPENRESTY_PREFIX)/nginx/sbin:$$PATH TEST_NGINX_NO_SHUFFLE=1 prove -I../test-nginx/lib -r $(TEST_FILE)
-	util/lua-releng
+test:
+	@PATH=$(OPENRESTY_PREFIX)/nginx/sbin:$$PATH TEST_NGINX_NO_SHUFFLE=1 prove -I../test-nginx/lib -r $(TEST_FILE)

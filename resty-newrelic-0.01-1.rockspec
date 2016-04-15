@@ -1,5 +1,5 @@
 package = "resty-newrelic"
-version = "0.01-0"
+version = "0.01-1"
 source = {
    url = "git://github.com/saks/lua-resty-newrelic",
    tag = "v0.01"
