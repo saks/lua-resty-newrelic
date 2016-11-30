@@ -306,11 +306,11 @@ local nrt = ffi.load('newrelic-transaction', true)
 local nrc = ffi.load('newrelic-collector-client', true)
 
 local embed_collector = function()
-	nrt.newrelic_register_message_handler(nrc.newrelic_message_handler)
+  nrt.newrelic_register_message_handler(nrc.newrelic_message_handler)
 end
 
 local init = function(license, app_name, language, language_version)
-	return nrc.newrelic_init(license, app_name, language, language_version)
+  return nrc.newrelic_init(license, app_name, language, language_version)
 end
 
 local newrelic_record_metric = function(name, value)
@@ -319,39 +319,39 @@ local newrelic_record_metric = function(name, value)
 end
 
 local request_shutdown = function(reason)
-	return nrc.newrelic_request_shutdown(reason)
+  return nrc.newrelic_request_shutdown(reason)
 end
 
 local enable_instrumentation = function(set_enabled)
-	nrt.newrelic_enable_instrumentation(set_enabled)
+  nrt.newrelic_enable_instrumentation(set_enabled)
 end
 
 local begin_transaction = function()
-	return tonumber(nrt.newrelic_transaction_begin())
+  return tonumber(nrt.newrelic_transaction_begin())
 end
 
 local set_transaction_type_web = function(transaction_id)
   local transaction_id = tonumber(transaction_id, 10)
-	return tonumber(nrt.newrelic_transaction_set_type_web(transaction_id), 10)
+  return tonumber(nrt.newrelic_transaction_set_type_web(transaction_id), 10)
 end
 
 local set_transaction_type_other = function(transaction_id)
   local transaction_id = tonumber(transaction_id, 10)
-	return tonumber(nrt.newrelic_transaction_set_type_other(transaction_id), 10)
+  return tonumber(nrt.newrelic_transaction_set_type_other(transaction_id), 10)
 end
 
 local set_transaction_category = function(transaction_id, name)
   local transaction_id = tonumber(transaction_id, 10)
   local name           = tostring(name)
-	return tonumber(nrt.newrelic_transaction_set_category(transaction_id, name), 10)
+  return tonumber(nrt.newrelic_transaction_set_category(transaction_id, name), 10)
 end
 
 local notice_transaction_error = function(transaction_id, exception_type, error_message,
   stack_trace, stack_frame_delimiter)
 
   transaction_id = tonumber(transaction_id, 10)
-	return nrt.newrelic_transaction_notice_error(transaction_id, exception_type, error_message,
-    stack_trace, stack_frame_delimiter)
+  return nrt.newrelic_transaction_notice_error(transaction_id, exception_type, error_message,
+  stack_trace, stack_frame_delimiter)
 end
 
 -- list of attrs:
@@ -361,32 +361,32 @@ local add_transaction_attribute = function(transaction_id, name, value)
   name           = tostring(name)
   value          = tostring(value)
 
-	return nrt.newrelic_transaction_add_attribute(transaction_id, name, value)
+  return nrt.newrelic_transaction_add_attribute(transaction_id, name, value)
 end
 
 local set_transaction_name = function(transaction_id, name)
   transaction_id = tonumber(transaction_id, 10)
-	return nrt.newrelic_transaction_set_name(transaction_id, name)
+  return nrt.newrelic_transaction_set_name(transaction_id, name)
 end
 
 local set_transaction_request_url = function(transaction_id, request_url)
   transaction_id = tonumber(transaction_id, 10)
-	return nrt.newrelic_transaction_set_request_url(transaction_id, request_url)
+  return nrt.newrelic_transaction_set_request_url(transaction_id, request_url)
 end
 
 local set_max_transaction_trace_segments = function(transaction_id, max_trace_segments)
   transaction_id = tonumber(transaction_id, 10)
-	return nrt.newrelic_transaction_set_max_trace_segments(transaction_id, max_trace_segments)
+  return nrt.newrelic_transaction_set_max_trace_segments(transaction_id, max_trace_segments)
 end
 
 local end_transaction = function(transaction_id)
   transaction_id = tonumber(transaction_id, 10)
-	return nrt.newrelic_transaction_end(transaction_id)
+  return nrt.newrelic_transaction_end(transaction_id)
 end
 
 local begin_generic_segment = function(transaction_id, parent_segment_id, name)
   transaction_id = tonumber(transaction_id, 10)
-	return tonumber(nrt.newrelic_segment_generic_begin(transaction_id, parent_segment_id, name))
+  return tonumber(nrt.newrelic_segment_generic_begin(transaction_id, parent_segment_id, name))
 end
 
 local begin_datastore_segment = function(transaction_id, parent_segment_id, table, operation)
@@ -411,24 +411,24 @@ local end_segment = function(transaction_id, parent_segment_id)
 end
 
 local _M = {
-	embed_collector                    = embed_collector,
-	init                               = init,
-	request_shutdown                   = request_shutdown,
-	enable_instrumentation             = enable_instrumentation,
-	begin_transaction                  = begin_transaction,
-	notice_transaction_error           = notice_transaction_error,
-	add_transaction_attribute          = add_transaction_attribute,
-	set_transaction_name               = set_transaction_name,
-	set_transaction_request_url        = set_transaction_request_url,
+  embed_collector                    = embed_collector,
+  init                               = init,
+  request_shutdown                   = request_shutdown,
+  enable_instrumentation             = enable_instrumentation,
+  begin_transaction                  = begin_transaction,
+  notice_transaction_error           = notice_transaction_error,
+  add_transaction_attribute          = add_transaction_attribute,
+  set_transaction_name               = set_transaction_name,
+  set_transaction_request_url        = set_transaction_request_url,
   set_transaction_type_web           = set_transaction_type_web,
   set_transaction_type_other         = set_transaction_type_other,
   set_transaction_category           = set_transaction_category,
-	set_max_transaction_trace_segments = set_max_transaction_trace_segments,
-	end_transaction                    = end_transaction,
-	begin_generic_segment              = begin_generic_segment,
-	begin_datastore_segment            = begin_datastore_segment,
+  set_max_transaction_trace_segments = set_max_transaction_trace_segments,
+  end_transaction                    = end_transaction,
+  begin_generic_segment              = begin_generic_segment,
+  begin_datastore_segment            = begin_datastore_segment,
   begin_external_segment             = begin_external_segment,
-	end_segment                        = end_segment,
+  end_segment                        = end_segment,
   record_metric                      = newrelic_record_metric,
   NEWRELIC_STATUS_CODE_SHUTDOWN      = 0,
   NEWRELIC_STATUS_CODE_STARTING      = 1,
