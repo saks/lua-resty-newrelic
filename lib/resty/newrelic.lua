@@ -396,6 +396,13 @@ local begin_datastore_segment = function(transaction_id, parent_segment_id, tabl
   end
 end
 
+local begin_external_segment = function(transaction_id, parent_segment_id, host, name)
+  transaction_id = tonumber(transaction_id, 10)
+  if transaction_id then
+    return tonumber(nrt.newrelic_segment_external_begin(transaction_id, parent_segment_id, host, name), 10)
+  end
+end
+
 local end_segment = function(transaction_id, parent_segment_id)
   transaction_id = tonumber(transaction_id, 10)
   if transaction_id then
@@ -420,6 +427,7 @@ local _M = {
 	end_transaction                    = end_transaction,
 	begin_generic_segment              = begin_generic_segment,
 	begin_datastore_segment            = begin_datastore_segment,
+  begin_external_segment             = begin_external_segment,
 	end_segment                        = end_segment,
   record_metric                      = newrelic_record_metric,
   NEWRELIC_STATUS_CODE_SHUTDOWN      = 0,
