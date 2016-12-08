@@ -18,7 +18,9 @@ Table of Contents
 Status
 ======
 
-This library is considered production ready.
+This library is considered production ready. By default SDK will send all data using SSL.
+Also, SDK provides an option to turn on so called "HIGH_SECURITY" mode.
+So far, it looks like it doesn't work even if you set "NEWRELIC_ENABLE_HIGH_SECURITY" env var to "1".
 
 Description
 ===========
@@ -56,14 +58,19 @@ Synopsis
                     local newrelic_agent = require 'resty.newrelic_agent'
                     local nr_transaction_id = ngx.ctx.nr_transaction_id
 
-                    -- track database query
+                    local call_remote_host = function(uri)
+                      ngx.log(ngx.ERR, 'Calling ' .. uri .. ' host...')
+                      ngx.sleep(math.random())
+                    end
+
                     local redis = require 'resty.redis'
                     local red = redis:new()
+                    red:set_timeout(math.random(1000))
 
+                    -- track database query
                     local redis_connect_segment_id = newrelic.begin_datastore_segment(
-                      nr_transaction_id, newrelic.NEWRELIC_ROOT_SEGMENT, 'redis', 'connect')
+                    nr_transaction_id, newrelic.NEWRELIC_ROOT_SEGMENT, 'redis', 'connect')
                     local connect_ok, connect_err = red:connect('127.0.0.1', 6379)
-
                     newrelic.end_segment(nr_transaction_id, redis_connect_segment_id)
 
                     -- increment custom metric
@@ -72,18 +79,14 @@ Synopsis
                     else
                       -- log error to newrelic
                       newrelic_agent.notice_error('Failed to connect to redis',
-                        connect_err, debug.traceback(), '\n')
-
+                      connect_err, debug.traceback(), '\n')
                     end
 
                     -- track remote call
-                    local http = require 'resty.http'
                     local uri = 'http://google.com'
-                    local httpc = http.new()
                     local external_segment_id = newrelic.begin_external_segment(nr_transaction_id,
                     newrelic.NEWRELIC_ROOT_SEGMENT, uri, 'google home page')
-
-                    httpc:request_uri(uri, { foo = 'bar' })
+                    call_remote_host(uri)
                     newrelic.end_segment(nr_transaction_id, external_segment_id)
                 }
 
@@ -93,6 +96,13 @@ Synopsis
             }
         }
     }
+```
+
+For experimentation purposes you can play with docker container in the examples directory.
+```sh
+NEWRELIC_APP_LICENSE_KEY=<your license key> docker-compose run --rm server
+IP=$(docker inspect -f '{{range .NetworkSettings.Networks}}{{.IPAddress}}{{end}}' examples_server_run_1)
+curl $IP/test/1
 ```
 
 [Back to TOC](#table-of-contents)

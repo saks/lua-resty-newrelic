@@ -1,0 +1,12 @@
+---
+server:
+  build: "."
+  hostname: "test_nr_app_container"
+  environment:
+    - "NEWRELIC_APP_LICENSE_KEY"
+    - "NEWRELIC_APP_NAME=test_nr_app"
+    - "NEWRELIC_ENABLE_HIGH_SECURITY"
+    - "NEWRELIC_ENABLE_SSL"
+  volumes:
+    - "./nginx.conf:/etc/nginx/nginx.conf"
+    - "./content_by_lua_example.lua:/opt/openresty/nginx/content_by_lua_example.lua"
