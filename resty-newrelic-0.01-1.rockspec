@@ -1,7 +1,7 @@
 package = "resty-newrelic"
 version = "0.01-1"
 source = {
-   url = "git://github.com/saks/lua-resty-newrelic",
+   url = "https://github.com/saks/lua-resty-newrelic/archive/master.zip",
    tag = "v0.01"
 }
 description = {
