@@ -13,7 +13,7 @@ _M.enable = function()
   if _M.enabled then
     newrelic.embed_collector()
     newrelic.init(license_key, app_name, 'lua', '-')
-    ngx.log(ngx.ERR, 'Starting newrelic agent.')
+    ngx.log(ngx.INFO, 'Starting newrelic agent.')
   else
     ngx.log(ngx.ERR, 'Newrelic agent is not configured')
   end
